@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/tdudkowski/notemacher.git/static/css/main.1d44a2f9.chunk.css",
-    "main.js": "/tdudkowski/notemacher.git/static/js/main.52043ebd.chunk.js",
-    "main.js.map": "/tdudkowski/notemacher.git/static/js/main.52043ebd.chunk.js.map",
-    "runtime-main.js": "/tdudkowski/notemacher.git/static/js/runtime-main.4a748ace.js",
-    "runtime-main.js.map": "/tdudkowski/notemacher.git/static/js/runtime-main.4a748ace.js.map",
-    "static/js/2.8785cbc4.chunk.js": "/tdudkowski/notemacher.git/static/js/2.8785cbc4.chunk.js",
-    "static/js/2.8785cbc4.chunk.js.map": "/tdudkowski/notemacher.git/static/js/2.8785cbc4.chunk.js.map",
-    "static/js/3.0bf1e4ca.chunk.js": "/tdudkowski/notemacher.git/static/js/3.0bf1e4ca.chunk.js",
-    "static/js/3.0bf1e4ca.chunk.js.map": "/tdudkowski/notemacher.git/static/js/3.0bf1e4ca.chunk.js.map",
+    "main.js": "/tdudkowski/notemacher.git/static/js/main.95044828.chunk.js",
+    "main.js.map": "/tdudkowski/notemacher.git/static/js/main.95044828.chunk.js.map",
+    "runtime-main.js": "/tdudkowski/notemacher.git/static/js/runtime-main.6c2f71b7.js",
+    "runtime-main.js.map": "/tdudkowski/notemacher.git/static/js/runtime-main.6c2f71b7.js.map",
+    "static/js/2.3cda1ae1.chunk.js": "/tdudkowski/notemacher.git/static/js/2.3cda1ae1.chunk.js",
+    "static/js/2.3cda1ae1.chunk.js.map": "/tdudkowski/notemacher.git/static/js/2.3cda1ae1.chunk.js.map",
+    "static/js/3.35ed943b.chunk.js": "/tdudkowski/notemacher.git/static/js/3.35ed943b.chunk.js",
+    "static/js/3.35ed943b.chunk.js.map": "/tdudkowski/notemacher.git/static/js/3.35ed943b.chunk.js.map",
     "index.html": "/tdudkowski/notemacher.git/index.html",
     "static/css/main.1d44a2f9.chunk.css.map": "/tdudkowski/notemacher.git/static/css/main.1d44a2f9.chunk.css.map",
-    "static/js/2.8785cbc4.chunk.js.LICENSE.txt": "/tdudkowski/notemacher.git/static/js/2.8785cbc4.chunk.js.LICENSE.txt",
+    "static/js/2.3cda1ae1.chunk.js.LICENSE.txt": "/tdudkowski/notemacher.git/static/js/2.3cda1ae1.chunk.js.LICENSE.txt",
     "static/media/style.css": "/tdudkowski/notemacher.git/static/media/lead-pencil.518fa4ed.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.4a748ace.js",
-    "static/js/2.8785cbc4.chunk.js",
+    "static/js/runtime-main.6c2f71b7.js",
+    "static/js/2.3cda1ae1.chunk.js",
     "static/css/main.1d44a2f9.chunk.css",
-    "static/js/main.52043ebd.chunk.js"
+    "static/js/main.95044828.chunk.js"
   ]
 }
