@@ -1,17 +1,26 @@
 [
   {
-        "id": "1",
-        "title": "first title JSON",
-       "content": "first content"
-    },
-   {
-        "id": "2",
-        "title": "JSON second title",
-        "content": "second content"
-    },
-   {
-        "id": "3",
-        "title": "JSON third title",
-        "content": "third content"
-    }
-  ]
+    "id": "1",
+    "author": "admin",
+    "dateCreation": "2020-11-25",
+    "dateEdit": "2020-11-20",
+    "title": "first title JSON",
+    "content": "first content"
+  },
+  {
+    "id": "2",
+    "author": "admin",
+    "dateCreation": "2020-11-25",
+    "dateEdit": null,
+    "title": "JSON second title",
+    "content": "second content"
+  },
+  {
+    "id": "3",
+    "author": "admin",
+    "dateCreation": "2020-11-25",
+    "dateEdit": null,
+    "title": "JSON third title",
+    "content": "third content"
+  }
+]

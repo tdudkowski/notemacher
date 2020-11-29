@@ -74,6 +74,8 @@ footer {flex-basis: 3rem; border-top:1px solid #dda;}
 .navgh a {display:block; padding:.5rem; text-decoration: none;}
 .navgh a:hover {text-decoration: underline; background-color: rgba(151,151,151,.1);}
 
+.noteInfo {background-color: rgba(150,150,150,.3); font-size: .8rem; color: #665; line-height: 0.8rem; margin:0; padding:0; text-align:right;}
+
 @media (min-width:700px) and (min-height:500px) {
     header { max-height: 4rem; flex-direction: row;}
     main { flex-direction: row;}

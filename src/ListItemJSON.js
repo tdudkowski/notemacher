@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-const ListItemJSON = ({ id, title, content, open, deleteIt }) => {
+const ListItemJSON = ({ id, title, author, dateCreation, dateEdit, content, open, deleteIt }) => {
     return (
         <div key={id}>
             <h4>{title}--{id}
@@ -9,6 +9,7 @@ const ListItemJSON = ({ id, title, content, open, deleteIt }) => {
                     <button onClick={(e) => deleteIt(id)}>delete</button>
                 </span>
             </h4>
+            <p className="noteInfo">Created by: {author} | Creation: {dateCreation} | {dateEdit ? `Last edit: ${dateEdit}` : `unedited`}</p>
             <p>{content}</p>
         </div >
     )

@@ -10,7 +10,7 @@ const Search = ({ searchFunction }) => {
     return (
         <div className="search">
             <input type="text" name="notes" onChange={handleInputValue} />
-            <h3>Search</h3>
+            <h3>type to search</h3>
         </div>
     )
 }
