@@ -27,7 +27,7 @@ class App extends React.Component {
     //   .then(nbpdata => { console.log('Success:', this.state.nbpdata) })
     //   // .then((nbpdata) => nbpdata.length ? JSON.parse(nbpdata) : {})
     //   .catch((error) => { console.error('Error:', error) })
-    const response1 = await fetch('http://api.nbp.pl/api/exchangerates/tables/a')
+    const response1 = await fetch('https://api.nbp.pl/api/exchangerates/tables/a')
     const response2 = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.1&lon=17.0')
     const geld = await response1.json()
     const weather = await response2.json()
