@@ -32,8 +32,8 @@ class App extends React.Component {
     const geld = await response1.json()
     const weather = await response2.json()
 
-    if (!response1.ok) {
-      const message = `An error has occured: ${response1.status}`;
+    if (!response2.ok) {
+      const message = `An error has occured: ${response2.status}`;
       throw new Error(message);
     }
     this.setState({
@@ -142,7 +142,8 @@ class App extends React.Component {
         </main>
         <footer><p>_notemacher: React 17 + hooks</p>
           <hr />
-          <p>Fetched from NBP API: Euro: {this.state.euro}; US Dollar: {this.state.dollar} | Fetched from Meteorologisk institutt: temperature in Wrocław {this.state.temperatureInWroclaw}°C</p>
+          <p>
+            Fetched from NBP API: Euro: {this.state.euro}; US Dollar: {this.state.dollar} | Fetched from Meteorologisk institutt: temperature in Wrocław {this.state.temperatureInWroclaw}°C</p>
         </footer>
       </>
     )
