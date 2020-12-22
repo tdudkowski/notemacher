@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "./static/css/main.95f870ad.chunk.css",
-    "main.js": "./static/js/main.3ff30ec9.chunk.js",
-    "main.js.map": "./static/js/main.3ff30ec9.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.97ea89b6.js",
-    "runtime-main.js.map": "./static/js/runtime-main.97ea89b6.js.map",
-    "static/css/2.e426f036.chunk.css": "./static/css/2.e426f036.chunk.css",
-    "static/js/2.3744adb2.chunk.js": "./static/js/2.3744adb2.chunk.js",
-    "static/js/2.3744adb2.chunk.js.map": "./static/js/2.3744adb2.chunk.js.map",
-    "static/js/3.71f4bf48.chunk.js": "./static/js/3.71f4bf48.chunk.js",
-    "static/js/3.71f4bf48.chunk.js.map": "./static/js/3.71f4bf48.chunk.js.map",
-    "index.html": "./index.html",
-    "static/css/2.e426f036.chunk.css.map": "./static/css/2.e426f036.chunk.css.map",
-    "static/css/main.95f870ad.chunk.css.map": "./static/css/main.95f870ad.chunk.css.map",
-    "static/js/2.3744adb2.chunk.js.LICENSE.txt": "./static/js/2.3744adb2.chunk.js.LICENSE.txt",
-    "static/media/style.css": "./static/media/lead-pencil.518fa4ed.svg"
+    "main.css": "/notemacher/static/css/main.af3457db.chunk.css",
+    "main.js": "/notemacher/static/js/main.6c441cc9.chunk.js",
+    "main.js.map": "/notemacher/static/js/main.6c441cc9.chunk.js.map",
+    "runtime-main.js": "/notemacher/static/js/runtime-main.94f25e25.js",
+    "runtime-main.js.map": "/notemacher/static/js/runtime-main.94f25e25.js.map",
+    "static/css/2.e426f036.chunk.css": "/notemacher/static/css/2.e426f036.chunk.css",
+    "static/js/2.5e4d8dc3.chunk.js": "/notemacher/static/js/2.5e4d8dc3.chunk.js",
+    "static/js/2.5e4d8dc3.chunk.js.map": "/notemacher/static/js/2.5e4d8dc3.chunk.js.map",
+    "static/js/3.0beb3be4.chunk.js": "/notemacher/static/js/3.0beb3be4.chunk.js",
+    "static/js/3.0beb3be4.chunk.js.map": "/notemacher/static/js/3.0beb3be4.chunk.js.map",
+    "index.html": "/notemacher/index.html",
+    "static/css/2.e426f036.chunk.css.map": "/notemacher/static/css/2.e426f036.chunk.css.map",
+    "static/css/main.af3457db.chunk.css.map": "/notemacher/static/css/main.af3457db.chunk.css.map",
+    "static/js/2.5e4d8dc3.chunk.js.LICENSE.txt": "/notemacher/static/js/2.5e4d8dc3.chunk.js.LICENSE.txt",
+    "static/media/style.css": "/notemacher/static/media/lead-pencil.518fa4ed.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.97ea89b6.js",
+    "static/js/runtime-main.94f25e25.js",
     "static/css/2.e426f036.chunk.css",
-    "static/js/2.3744adb2.chunk.js",
-    "static/css/main.95f870ad.chunk.css",
-    "static/js/main.3ff30ec9.chunk.js"
+    "static/js/2.5e4d8dc3.chunk.js",
+    "static/css/main.af3457db.chunk.css",
+    "static/js/main.6c441cc9.chunk.js"
   ]
 }
