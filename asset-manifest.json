@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/notemacher/static/css/main.af3457db.chunk.css",
-    "main.js": "/notemacher/static/js/main.04e296be.chunk.js",
-    "main.js.map": "/notemacher/static/js/main.04e296be.chunk.js.map",
+    "main.js": "/notemacher/static/js/main.f04fbfc9.chunk.js",
+    "main.js.map": "/notemacher/static/js/main.f04fbfc9.chunk.js.map",
     "runtime-main.js": "/notemacher/static/js/runtime-main.94f25e25.js",
     "runtime-main.js.map": "/notemacher/static/js/runtime-main.94f25e25.js.map",
     "static/css/2.e426f036.chunk.css": "/notemacher/static/css/2.e426f036.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.e426f036.chunk.css",
     "static/js/2.5e4d8dc3.chunk.js",
     "static/css/main.af3457db.chunk.css",
-    "static/js/main.04e296be.chunk.js"
+    "static/js/main.f04fbfc9.chunk.js"
   ]
 }
