@@ -1,16 +1,18 @@
 import PropTypes from "prop-types"
 
-const ListItemJSON = ({ id, title, author, dateCreation, dateEdit, content, open, deleteIt }) => {
+const ListItemJSON = ({ id, title, author, editor, dateCreation, dateEdit, content, open, deleteIt }) => {
     return (
-        <div key={id}>
-            <h4>{title}--{id}
-                <span>
+        <div key={id} className="noteItem">
+            <header>
+                <div className="note-id">
+                    <span>note ID: {id}</span>
                     <button onClick={() => open(id)}>edit</button>
                     <button onClick={(e) => deleteIt(id)}>delete</button>
-                </span>
-            </h4>
-            <p className="noteInfo">Created by: {author} | Creation: {dateCreation} | {dateEdit ? `Last edit: ${dateEdit}` : `unedited`}</p>
-            <p>{content}</p>
+                </div>
+                <h4>{title}</h4>
+                <p className="noteInfo"><span>Created: {dateCreation} by {author}</span> | <span>{dateEdit ? `Last edit: ${dateEdit} by: ${editor} ` : `unedited`}</span></p>
+            </header>
+            <div className="content">{content}</div>
         </div >
     )
 }

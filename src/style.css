@@ -4,9 +4,22 @@ body {margin:0; padding:0; font-family: 'Montserrat', sans-serif;}
 
 h2 {margin-top:0; padding:1rem;}
 
+button {background-color: #fff; border:1px solid rgba(99, 65, 65, 0.4); }
+button:hover {cursor: pointer; }
+
+.navgh a {display:block; padding: 5px; line-height: 1.1rem; margin:0;}
+.navgh button {padding: 5px 10px; line-height: 1.1rem; margin:0 .2rem;}
+button.big, header button { border-radius: 5px; margin: 0 1px; line-height: 1rem; padding:1px 5px;}
+button.big:hover, header button:hover {border:1px solid rgba(99, 65, 65, 0.5); box-shadow: 1px 1px 2px rgba(51,51,51,.5);}
+
 #root {min-height: 100vh; max-width:1200px; margin:0 auto; display:flex; flex-direction: column;}
 
-header {display:flex; flex-direction: column; justify-content: space-between; border-bottom:1px solid #dda;}
+header.header {display:flex; flex-direction: column; justify-content: space-between; background-color: #D9F9A5;}
+
+header.header ul button.big {line-height: 2rem;}
+
+div.search {margin:10px 5px;}
+header input {width:9rem;}
 
 main {flex:1; display:flex; flex-direction: column-reverse;}
 
@@ -14,17 +27,32 @@ article h3 {margin-top:0}
 
 article.listNotes {flex:1; padding:1rem;}
 
-article.listNotes div {margin:1rem; box-shadow:2px 2px 3px #665;}
+article.listNotes .noteItem {border: 1px solid rgba(51,51,51, .1); box-shadow: 1px 1px 3px rgba(51,51,51, .2); border-radius:2px; margin:1rem 0;}
 
-article.listNotes div h4 {padding:.5rem; margin:0; padding-left:2rem; display:flex; justify-content:space-between; position: relative; background-color: rgba(150,150,150,.3);}
+article.listNotes header div.note-id {display: flex; justify-content:flex-end;}
 
-article.listNotes div h4::before { position: absolute; display:block; content:""; left: -10px; top:-10px; width:2rem; height: 2rem; background-image: url("lead-pencil.svg"); background-repeat: no-repeat; background-size: cover; border:1px solid #bba; border-width: 1px 0 0 1px; fill: green;}
+article.listNotes header div.note-id button {margin: 5px 2px;}
 
-article.listNotes div p {padding:.5rem; margin:0;}
+article.listNotes header { position: relative; background-color: #F4FEC1;}
 
-aside {flex-basis: 20rem; border:1px solid rgba(150,150,150,.3); border-width: 0 1px;}
+article.listNotes div.content {padding:.5rem;}
+
+.noteInfo {font-size: .8rem; color: #665; line-height: 0.8rem; margin:0;text-align:right; padding:5px;}
+.noteInfo span {background-color: rgba(250,250,250,.6); padding:1px 6px; border-radius: 10px;}
+
+article.listNotes header::before { position: absolute; display:block; content:""; left: -10px; top:-10px; width:2rem; height: 2rem; background-image: url("lead-pencil.svg"); background-repeat: no-repeat; background-size: cover; border:1px solid #bba; border-width: 1px 0 0 1px; border-radius: 2px;}
+
+article.listNotes header h4 {margin:0; padding:5px .5rem;}
+
+.note-id span {display:inline-block; color:#665; font-weight: normal; margin:-5px 5px 0 0; border:1px solid #ddd;
+    border-radius: 5px; background-color: #F4FEC1; padding: 5px .4rem;}
+
+aside {flex-basis: 20rem; background-color: #F6F4F4;}
 
 aside h3 { margin: 1rem;}
+
+aside p {margin:1rem;}
+aside ul {margin:1rem; padding-left:1rem;}
 
 form.form { margin: 1rem;}
 
@@ -32,10 +60,8 @@ label {display:block; margin:1rem 0 .5rem 0;}
 
 aside input {width:90%; line-height: 1.6rem;}
 aside textarea {width:90%; line-height: 1.6rem; height:10rem;}
-aside button {width:90%; height:2rem; border:1px solid #663; background-color: #fff; margin:0; border-radius:2px; box-shadow:3px 3px 5px #663;}
-aside button:hover {cursor: pointer;  box-shadow:3px 3px 5px #331;}
 
-footer {flex-basis: 3rem; border-top:1px solid #dda;}
+footer {flex-basis: 3rem; background-color: #D9F9A5; text-align: center;}
 
 .search {
     height: 2rem;
@@ -57,27 +83,34 @@ footer {flex-basis: 3rem; border-top:1px solid #dda;}
     min-height: 100vh;
     padding:0;
     background-color: #fff;
+    z-index: 100;
    
 }
 .edit form {background-color:  rgba(150,150,150,.1); margin:0; padding:1rem;}
-.edit header {flex-direction: row; flex-wrap: wrap;}
+.edit header {display:flex; flex-direction: row; flex-wrap: wrap;}
 .edit header h3 {margin:0; padding:.3rem; width:10rem; }
-.edit header button {padding:.3rem; width:6rem;}
+.edit header button.big {padding:.3rem; width:6rem;}
 .edit form {padding:.5rem}
 .edit label {margin: .5rem;}
 .edit input {width:90%; line-height: 1.6rem;}
-.edit textarea {width:90%; line-height: 1.6rem; height:4rem;}
-.edit button {border:1px solid #111; width:10rem; height: 2rem; }
-.edit > button {margin:0 1rem;}
+.edit textarea {line-height: 1.6rem; height:4rem;}
+.edit button.big {border:1px solid #111; width:10rem; height: 2rem; }
+.edit > button.big {margin:0 1rem;}
+
+.editorContainer {background-color: rgba(51,51,51,.2); border:1px solid #996;}
 
 .navgh ul {display: flex; list-style-type: none;}
 .navgh a {display:block; padding:.5rem; text-decoration: none;}
-.navgh a:hover {text-decoration: underline; background-color: rgba(151,151,151,.1);}
+.navgh a:hover {text-decoration: underline; background-color: rgba(251,251,51,.1);}
 
-.noteInfo {background-color: rgba(150,150,150,.3); font-size: .8rem; color: #665; line-height: 0.8rem; margin:0; padding:0; text-align:right;}
+.DraftEditor-root {border:1px solid rgba(51,51,51,.1);}
+
+.DraftEditor-editorContainer {background-color: rgba(251,251,251,.95); padding:10px;}
+
+.infoOnMongo {display:inline-block ;background: #ff8; padding:5px; line-height: 1.5rem;}
 
 @media (min-width:700px) and (min-height:500px) {
-    header { max-height: 4rem; flex-direction: row;}
+    header.header { max-height: 4rem; flex-direction: row;}
     main { flex-direction: row;}
 
     .edit {
@@ -93,10 +126,11 @@ footer {flex-basis: 3rem; border-top:1px solid #dda;}
         border:1px solid #996;
           box-shadow: 0 20px 40px -10px rgba(81,81,81,.5);
     }
-    .edit header h3 {margin:0; padding:.5rem; width:calc(100% - 9rem);}
-    .edit header button {margin:.5rem;}
+    
+    .edit header h3 {margin:0; padding:.5rem; width:calc(100% - 10rem);}
+    .edit header button.big {margin:.5rem; width:7rem;}
  
     .edit textarea {height:10rem;}
     
-    .edit button:hover {cursor: pointer;  box-shadow:3px 3px 5px #331;}
+    .edit button.big:hover {cursor: pointer;  box-shadow:3px 3px 5px #331;}
 }

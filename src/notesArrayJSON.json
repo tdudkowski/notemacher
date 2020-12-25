@@ -2,25 +2,10 @@
   {
     "id": "1",
     "author": "admin",
-    "dateCreation": "2020-11-25",
-    "dateEdit": "2020-11-20",
-    "title": "first title JSON",
-    "content": "first content"
-  },
-  {
-    "id": "2",
-    "author": "admin",
-    "dateCreation": "2020-11-25",
-    "dateEdit": null,
-    "title": "JSON second title",
-    "content": "second content"
-  },
-  {
-    "id": "3",
-    "author": "admin",
-    "dateCreation": "2020-11-25",
-    "dateEdit": null,
-    "title": "JSON third title",
-    "content": "third content"
+    "dateCreation": "2020-11-25 - 21:37",
+    "editor": "admin",
+    "dateEdit": "2020-11-20 - 21:37",
+    "title": "Obvious Info",
+    "content": "This is notemaking app done only for an educational purposes. All notes done by you at JSON section are lost at every reload, only this first note is kept at file. All notes in mongoDB section are stored on mongoDB database, and can be read and deleted by any other user. Do not write here any confidential or important info not saved anywhere else."
   }
 ]

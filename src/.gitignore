@@ -34,6 +34,6 @@ log.md
 package.json
 
 # +notemacher APP
-/src/NodeAPI/node_modules
-/src/NodeAPI/.env
-/src/NodeAPI/.vscode
+/NodeAPI/node_modules
+/NodeAPI/.env
+/NodeAPI/.vscode
