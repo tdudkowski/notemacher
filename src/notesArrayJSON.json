@@ -2,9 +2,9 @@
   {
     "id": "1",
     "author": "admin",
-    "dateCreation": "2020-11-25 - 21:37",
+    "dateCreation": "2020-12-25 - 21:36",
     "editor": "admin",
-    "dateEdit": "2020-11-20 - 21:37",
+    "dateEdit": "2020-12-25 - 21:38",
     "title": "Obvious Info",
     "content": "This is notemaking app done only for an educational purposes. All notes done by you at JSON section are lost at every reload, only this first note is kept at file. All notes in mongoDB section are stored on mongoDB database, and can be read and deleted by any other user. Do not write here any confidential or important info not saved anywhere else."
   }

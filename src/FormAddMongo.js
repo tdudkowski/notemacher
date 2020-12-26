@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { EditorState, RichUtils } from 'draft-js'
-import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor'
+import Editor from 'draft-js-plugins-editor'
 import 'draft-js/dist/Draft.css'
 import 'draft-js-static-toolbar-plugin/lib/plugin.css'
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
@@ -20,10 +20,11 @@ import {
 } from 'draft-js-buttons';
 import { stateToHTML } from 'draft-js-export-html'
 
+// https://www.draft-js-plugins.com/plugin/static-toolbar
+
 const staticToolbarPlugin = createToolbarPlugin();
 const { Toolbar } = staticToolbarPlugin;
 const plugins = [staticToolbarPlugin];
-const text = 'The toolbar above the editor can be used for formatting text, as in conventional static editors  …';
 
 const FormAddMongo = ({ addMongoFunction, edit, close, id }) => {
 

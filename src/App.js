@@ -5,7 +5,6 @@ import ListItemJSON from "./ListItemJSON"
 import Form from "./Form"
 import FormEditMongo from "./FormEditMongo"
 import FormAddMongo from "./FormAddMongo"
-import Search from "./Search"
 import Data from './notesArrayJSON.json'
 import FetchFn from "./Fetch"
 import "./style.css"
@@ -32,19 +31,25 @@ class App extends React.Component {
     editMongoTime: null,
     userMongoID: null,
     mongoDB: [],
+    searchValue: 0,
+    testo: null
   }
 
   async componentDidMount() {
     const response1 = await fetch('https://api.nbp.pl/api/exchangerates/tables/a')
-    axios.get('https://notemacher.herokuapp.com/notes')
-      // axios.get('http://localhost:5000/notes')
 
-      .then(res => {
-        this.setState({ mongoDB: [...res.data] });
-      })
-      .catch(function (error) {
-        console.log("ERROR IN componentDidMount: ", error);
-      })
+    if (this.searchValue === 0) {
+      axios.get('https://notemacher.herokuapp.com/notes')
+        // axios.get('http://localhost:5000/notes')
+
+        .then(res => {
+          this.setState({ mongoDB: [...res.data] });
+        })
+        .then(console.log("componentMounted"))
+        .catch(function (error) {
+          console.log("ERROR IN componentDidMount: ", error);
+        })
+    }
     const geld = await response1.json()
 
     this.setState({
@@ -55,14 +60,17 @@ class App extends React.Component {
   }
 
   async componentDidUpdate() {
-    axios.get('https://notemacher.herokuapp.com/notes')
-      // axios.get('http://localhost:5000/notes')
-      .then(res => {
-        this.setState({ mongoDB: [...res.data] });
-      })
-      .catch(function (error) {
-        console.log("ERROR IN componentDidUpdate: ", error);
-      })
+    if (this.state.searchValue === 0) {
+      axios.get('https://notemacher.herokuapp.com/notes')
+        // axios.get('http://localhost:5000/notes')
+        .then(res => {
+          this.setState({ mongoDB: [...res.data] });
+        })
+        .then(console.log("componentUpdated"))
+        .catch(function (error) {
+          console.log("ERROR IN componentDidUpdate: ", error);
+        })
+    }
   }
 
   /*--- JSON ----*/
@@ -288,6 +296,27 @@ class App extends React.Component {
       })
   }
 
+  /* SEARCH MONGO */
+  // https://stackoverflow.com/questions/37401635/react-js-wait-for-setstate-to-finish-before-triggering-a-function
+  searchMongoFunction = (e) => {
+    axios.get('https://notemacher.herokuapp.com/notes')
+      .then(res => {
+        this.setState({
+          mongoDB: [...res.data],
+          searchValue: e.target.value.length,
+        },
+          () => {
+            this.setState({
+              mongoDB: this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || obj.content.toLowerCase().includes(e.target.value.toLowerCase())),
+            })
+          })
+      })
+      .catch(function (error) {
+        console.log("ERROR IN componentSearch: ", error)
+      })
+    console.log(this.state.searchValue, this.state.mongoDB)
+  }
+
   /*--- APP BODY ---*/
 
   render() {
@@ -308,7 +337,10 @@ class App extends React.Component {
               <li><button onClick={this.openCreateMongo}>ADD mongoDB Note</button></li>
             </ul>
           </nav>
-          <Search searchFunction={this.searchFunction} />
+          <div className="search">
+            <input type="text" name="notes" placeholder="search Mongo" onChange={this.searchMongoFunction} />
+            <h3>type to search</h3>
+          </div>
         </header>
         <main>
           <article className="listNotes">
@@ -321,13 +353,21 @@ class App extends React.Component {
             <hr />
 
             <h3>MongoDB Notes</h3>
-            {this.mongoNotes().length ? this.mongoNotes() : <span className="infoOnMongo">It seems there're no mongoNotes at the moment. All were deleted. If you want to see any, first you should make one. Use the button "Add mongoDB Note"</span>}
+            {this.mongoNotes().length ? this.mongoNotes() : <div className="infoOnMongo">
+              <p>If you are seeing this info, there're a few possibilities:</p>
+              <ul>
+                <li>Your search returned no results (aka result is empty)</li>
+                <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably)</li>
+                <li>Database is empty now, in this case please use "ADD mongoDB Note" button to create one</li>
+              </ul>
+
+            </div>}
           </article>
 
           {isEditOpen && <div className="edit">
             <header>
               <h3>Edit JSON Note - note id: {this.state.id}</h3>
-              <button onClick={this.closeEdit}>CLOSE</button>
+              <button className="big" onClick={this.closeEdit}>CLOSE</button>
             </header>
             <Form edit id={this.state.id} changeFunction={this.editItem} array={this.state.notesJSON}
               stateContentVal={this.state.stateContentVal} close={this.closeEdit} />
@@ -336,7 +376,7 @@ class App extends React.Component {
 
           {isCreateOpenJSON && <div className="edit">
             <header><h3>Add a JSON note</h3>
-              <button onClick={this.closeCreateJSON}>CLOSE</button>
+              <button className="big" onClick={this.closeCreateJSON}>CLOSE</button>
             </header>
             <Form add addFunction={this.addItem} />
           </div>}
@@ -368,7 +408,6 @@ class App extends React.Component {
             <FormAddMongo addMongoFunction={this.addItemMongo} close={this.closeEditMongo} />
           </div>}
 
-
           <aside>
 
             <h3>_notemacher</h3>
@@ -377,7 +416,8 @@ class App extends React.Component {
               <li><strong>JSON Notes</strong> kept in local React file</li>
               <li><strong>mongoDB Notes</strong> from mongoDB Atlas served by Node.js API</li>
             </ul>
-            <p>Search function for now is working only for JSON Notes. This is the last TODO for basic functionality.</p>
+            <p>Search function is working only for mongoDB Notes. JSON Notes are kept only for a testing purposes.</p>
+            <p>Search function is still not fully working. For now it takes an HTML form of Note, not reduced text. That means any search going out of the same format of text fails.</p>
             <p>Stack:</p>
             <ul>
               <li>Draft.js</li>
@@ -388,15 +428,15 @@ class App extends React.Component {
             </ul>
             <hr />
             <h3>Fetch</h3>
-            <ul>
-              <li>(state component) Data fetched from NBP API:
-                <ul>
-                  <li><strong>Euro: {this.state.euro}</strong></li>
-                  <li><strong>US Dollar: {this.state.dollar}</strong></li>
-                </ul>
-              </li>
-              <li><FetchFn /></li>
-            </ul>
+            <p>(state component) Data fetched from NBP API, ratio to Polish PLN</p>
+
+            <table className="tableFetch">
+              <tr><th>Currency</th><th>Ratio</th></tr>
+              <tr><td>Euro</td><td>{this.state.euro}</td></tr>
+              <tr><td>US Dollar</td><td>{this.state.dollar}</td></tr>
+            </table>
+
+            <FetchFn />
           </aside>
         </main>
         <footer>

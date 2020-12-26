@@ -1,8 +1,7 @@
 import { useState } from "react"
 import Data from './notesArrayJSON.json'
-import { Editor, EditorState, RichUtils, ContentState, getPlainText } from 'draft-js'
+import { Editor, EditorState, RichUtils, ContentState } from 'draft-js'
 import 'draft-js/dist/Draft.css'
-import { stateToHTML } from 'draft-js-export-html'
 
 const Form = ({ addFunction, changeFunction, edit, add, close, id }) => {
 
@@ -80,7 +79,7 @@ const Form = ({ addFunction, changeFunction, edit, add, close, id }) => {
             <label htmlFor="content">Content</label>
             <Editor editorState={editorState} onChange={onChange} handleKeyCommand={handleKeyCommand} />
             <div>
-                <button type="submit">{add ? "ADD" : "SAVE"}</button>
+                <button className="big" type="submit">{add ? "ADD" : "SAVE"}</button>
             </div>
         </form>
     )
