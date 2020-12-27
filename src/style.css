@@ -2,12 +2,12 @@
 
 body {margin:0; padding:0; font-family: 'Montserrat', sans-serif;}
 
-h2 {margin-top:0; padding:1rem;}
+h2 {margin:0; padding:1rem;}
 
 button {background-color: #fff; border:1px solid rgba(99, 65, 65, 0.4); }
 button:hover {cursor: pointer; }
 
-.navgh ul {padding-left:10px;}
+.navgh ul {padding-left:10px; margin-top:0;}
 .navgh a {display:block; padding: 5px; line-height: 1.1rem; margin:0;}
 .navgh button {padding: 5px 10px; line-height: 1.1rem; margin:0 .2rem;}
 button.big, header button { border-radius: 5px; margin: 0 1px; line-height: 1rem; padding:1px 5px;}
@@ -16,17 +16,21 @@ button.big:hover, header button:hover {border:1px solid rgba(99, 65, 65, 0.5); b
 #root {min-height: 100vh; max-width:1200px; margin:0 auto; display:flex; flex-direction: column;}
 
 header.header {display:flex; flex-direction: column; justify-content: space-between; background-color: #D9F9A5;}
+header.header p {padding:0 1rem;}
 
 header.header ul button.big {line-height: 2rem;}
 
-div.search {margin:10px 5px;}
+
+.search { display:flex; background-color: rgba(51,51,51,.1); flex-direction: column;}
+.search h3 {margin:0; padding:.3rem}
+div.search > * {display:flex;  border:2px solid rgba(150,150,150,.7); border-radius: 5px;}
 header input {width:9rem;}
 
 main {flex:1; display:flex; flex-direction: column-reverse;}
 
-article h3 {margin-top:0}
+article h3 {margin:1rem;}
 
-article.listNotes {flex:1; padding:1rem;}
+article.listNotes {flex:1; padding:5px;}
 
 article.listNotes .noteItem {border: 1px solid rgba(51,51,51, .1); box-shadow: 1px 1px 3px rgba(51,51,51, .2); border-radius:2px; margin:1rem 0;}
 
@@ -63,18 +67,6 @@ aside input {width:90%; line-height: 1.6rem;}
 aside textarea {width:90%; line-height: 1.6rem; height:10rem;}
 
 footer {flex-basis: 3rem; background-color: #D9F9A5; text-align: center;}
-
-.search {
-    height: 2rem;
-    margin: 1rem;
-    padding:3px;
-    display:flex;
-    background-color: rgba(150,150,150,.1);
-    border:2px solid rgba(150,150,150,.7);
-    border-radius: 5px;
-}
-
-.search h3 {margin:0; padding:.3rem}
 
 .edit {
     position: fixed;
@@ -114,8 +106,19 @@ footer {flex-basis: 3rem; background-color: #D9F9A5; text-align: center;}
 .tableFetch th {background-color: rgba(51,51,51,.1);}
 .tableFetch th, .tableFetch td {padding: 2px 10px;}
 
+.searchResult {border:1px solid transparent; border-radius: 5px; padding:10px; padding-left:20px;}
+.searchResult.result {border:1px solid grey; background-color:rgba(248, 215, 218, .2); }
+
+/* rgb(207, 244, 252); */
 @media (min-width:700px) and (min-height:500px) {
-    header.header { max-height: 4rem; flex-direction: row;}
+    .navgh {display:flex;}
+}
+@media (min-width:900px) and (min-height:500px) {
+    header.header { flex-direction: row; flex-wrap: wrap;}
+    .header h2 {margin-bottom:0;}
+    .navgh {padding:1rem 1rem 0 0;} 
+    .header .search {flex-direction: row; flex-basis: 100%;  justify-content:flex-end; margin:0;}
+    .header .search > * {margin:10px 2rem;}
     main { flex-direction: row;}
 
     .edit {

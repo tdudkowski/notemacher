@@ -27,11 +27,13 @@ const FetchFn = () => {
         <p>(functional component w/ hooks useState and useEffect) Data fetched from Meteorologisk institutt:</p>
 
         <table className="tableFetch">
-            <tr><th>City</th><th>Temperature now</th></tr>
-            <tr><td>Wrocław</td><td>{data[0]} °C</td></tr>
-            <tr><td>יְרוּשָׁלַיִם‎</td><td>{data[1]} °C</td></tr>
-            <tr><td>東京</td><td>{data[2]} °C</td></tr>
-            <tr><td>አዲስ አበባ</td><td>{data[3]} °C</td></tr>
+            <thead><tr><th>City</th><th>Temperature now</th></tr></thead>
+            <tbody>
+                <tr><td>Wrocław</td><td>{data[0]} °C</td></tr>
+                <tr><td>יְרוּשָׁלַיִם‎</td><td>{data[1]} °C</td></tr>
+                <tr><td>東京</td><td>{data[2]} °C</td></tr>
+                <tr><td>አዲስ አበባ</td><td>{data[3]} °C</td></tr>
+            </tbody>
         </table>
     </>)
 }

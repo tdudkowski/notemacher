@@ -32,7 +32,6 @@ class App extends React.Component {
     userMongoID: null,
     mongoDB: [],
     searchValue: 0,
-    testo: null
   }
 
   async componentDidMount() {
@@ -170,10 +169,22 @@ class App extends React.Component {
 
   /* MONGO LIST */
   mongoNotes() {
-    return this.state.mongoDB.map((data, id) => {
-      return <DataMongo obj={data} key={id} open={this.openEditMongo}
-        deleteMongoItem={() => this.removeItemMongo(data)} />
-    });
+    console.log("inside LIST BEFORE: ", this.state.mongoDB)
+    if (this.state.searchValue) {
+      // this.setState({ mongoDB: this.state.mongoDB, })
+      console.log("inside LIST if SEARCHVALUE: ", this.state.mongoDB)
+      return this.state.mongoDB.map((data, id) => {
+        return <DataMongo obj={data} key={id} open={this.openEditMongo}
+          deleteMongoItem={() => this.removeItemMongo(data)} />
+      });
+    }
+    else {
+      console.log("inside LIST if SEARCH NULL: ", this.state.mongoDB)
+      return this.state.mongoDB.map((data, id) => {
+        return <DataMongo obj={data} key={id} open={this.openEditMongo}
+          deleteMongoItem={() => this.removeItemMongo(data)} />
+      });
+    }
   }
 
   /* OPEN CREATE MONGO */
@@ -298,32 +309,79 @@ class App extends React.Component {
 
   /* SEARCH MONGO */
   // https://stackoverflow.com/questions/37401635/react-js-wait-for-setstate-to-finish-before-triggering-a-function
+  // https://stackoverflow.com/questions/3790681/regular-expression-to-remove-html-tags
+  // https://digitalfortress.tech/tricks/top-15-commonly-used-regex/
   searchMongoFunction = (e) => {
+    e.preventDefault()
     axios.get('https://notemacher.herokuapp.com/notes')
       .then(res => {
         this.setState({
+          searchValue: e.target[0].value.length,
           mongoDB: [...res.data],
-          searchValue: e.target.value.length,
         },
           () => {
-            this.setState({
-              mongoDB: this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || obj.content.toLowerCase().includes(e.target.value.toLowerCase())),
-            })
+            const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
+            const searchData = this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target[0].value.toLowerCase()) || removedHTML(obj.content).toLowerCase().includes(e.target[0].value.toLowerCase()))
+            this.setState(prevState => ({
+              mongoDB: searchData,
+            }))
           })
+        // this.mongoNotes()
+        console.log("inside SEARCH: ", this.state.mongoDB, e.target[0].value.length)
+        document.getElementsByClassName("searchResult")[0].classList.add("result")
       })
       .catch(function (error) {
         console.log("ERROR IN componentSearch: ", error)
       })
-    console.log(this.state.searchValue, this.state.mongoDB)
   }
 
+  handleInput = (e) => {
+    if (e.target.value.length === 0) {
+      this.setState({
+        searchValue: 0,
+      },
+        document.getElementsByClassName("searchResult")[0].classList.remove("result"))
+    }
+  }
+
+  restoreList = () => {
+    axios.get('https://notemacher.herokuapp.com/notes')
+      .then(res => {
+        this.setState({
+          searchValue: 0,
+          mongoDB: [...res.data],
+        },
+          document.getElementsByClassName("searchResult")[0].classList.remove("result"))
+      })
+  }
+
+  searchInstant = (e) => {
+    console.log("INSTANT!!!", e.target.value)
+
+    axios.get('https://notemacher.herokuapp.com/notes')
+      .then(res => {
+        this.setState({
+          searchValue: e.target.value.length,
+          mongoDB: [...res.data],
+        },
+          () => {
+            const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
+            const searchData = this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || removedHTML(obj.content).includes(e.target.value.toLowerCase()))
+            this.setState(prevState => ({
+              mongoDB: searchData,
+            }))
+          })
+        if (e.target.value.length === 0) { document.getElementsByClassName("searchResult")[0].classList.remove("result") }
+        else {
+          document.getElementsByClassName("searchResult")[0].classList.add("result")
+        }
+      })
+
+  }
   /*--- APP BODY ---*/
 
   render() {
-    const { isEditOpen } = this.state
-    const { isEditOpenMongo } = this.state
-    const { isCreateOpenMongo } = this.state
-    const { isCreateOpenJSON } = this.state
+    const { isEditOpen, isEditOpenMongo, isCreateOpenMongo, isCreateOpenJSON } = this.state
 
     return (
       <>
@@ -333,35 +391,54 @@ class App extends React.Component {
             <ul>
               <li><a href="https://tdudkowski.github.io/">[ to Github Page ]</a></li>
               <li><a href="https://github.com/tdudkowski/notemacher">[ repo of _notemacher ]</a></li>
+            </ul>
+            <ul>
               <li><button onClick={this.openCreateJSON}>ADD JSON Note</button></li>
               <li><button onClick={this.openCreateMongo}>ADD mongoDB Note</button></li>
             </ul>
           </nav>
           <div className="search">
-            <input type="text" name="notes" placeholder="search Mongo" onChange={this.searchMongoFunction} />
-            <h3>type to search</h3>
+            <form onSubmit={(e) => this.searchMongoFunction(e)}>
+              <input type="text" name="clickit" id="clickit" placeholder="search Mongo"
+                onChange={this.handleInput}
+              />
+              <button className="big" type="submit">SEARCH</button>
+            </form>
+            <div>
+              <input type="text" name="instant" id="instant" placeholder="search Mongo"
+                onChange={(e) => this.searchInstant(e)}
+              />
+              <h3>type to search</h3>
+            </div></div>
+          <div>
+            <p>This is almost-almost version. Adding, deleting, and editing notes is fine. Search is... almost OK. I left 2 options of searching, both have the same failures: 1) only a second, and every next, action (click or character in input) is effective, 2) search is fine regardless of formatting, but only in scope of one line, any break to next line results in fail.</p>
+            <p>I send this to the server because it's better than previous one. But it sill has some urgent TODOs.</p>
           </div>
         </header>
         <main>
           <article className="listNotes">
+            <h3>MongoDB Notes</h3>
+            <div className="searchResult">
+              {this.state.searchValue ? <div><h4>Search mode</h4>
+                <p>Till <strong>search mode</strong> is on, you can add, remove, and edit notes, but with no visible effect. To close search mode you should empty both input fields or click the button below 'restore list'.</p>
+                <p>The search returned {this.mongoNotes().length} items | <button className="big" onClick={this.restoreList}>Restore list</button></p></div> : null}
+              {this.state.mongoDB ? this.mongoNotes() : <div className="infoOnMongo">
+                <p>If you are seeing this info, there're a few possibilities:</p>
+                <ul>
+                  <li>Your search returned no results (aka result is empty)</li>
+                  <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably)</li>
+                  <li>Database is empty now, in this case please use "ADD mongoDB Note" button to create one</li>
+                </ul>
+              </div>}
+            </div>
+            <hr />
+
             <h3>JSON Notes</h3>
 
             {this.state.notesJSON.map(item => (
               <ListItemJSON key={item.id} {...item} open={this.openEdit} deleteIt={this.removeItem} />
             ))}
 
-            <hr />
-
-            <h3>MongoDB Notes</h3>
-            {this.mongoNotes().length ? this.mongoNotes() : <div className="infoOnMongo">
-              <p>If you are seeing this info, there're a few possibilities:</p>
-              <ul>
-                <li>Your search returned no results (aka result is empty)</li>
-                <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably)</li>
-                <li>Database is empty now, in this case please use "ADD mongoDB Note" button to create one</li>
-              </ul>
-
-            </div>}
           </article>
 
           {isEditOpen && <div className="edit">
@@ -413,11 +490,10 @@ class App extends React.Component {
             <h3>_notemacher</h3>
             <p>Two kinds of Notes:</p>
             <ul>
-              <li><strong>JSON Notes</strong> kept in local React file</li>
               <li><strong>mongoDB Notes</strong> from mongoDB Atlas served by Node.js API</li>
+              <li><strong>JSON Notes</strong> (below hr line) kept in local React file. I've started from it, but now they are kept only for a testing purposes.</li>
             </ul>
-            <p>Search function is working only for mongoDB Notes. JSON Notes are kept only for a testing purposes.</p>
-            <p>Search function is still not fully working. For now it takes an HTML form of Note, not reduced text. That means any search going out of the same format of text fails.</p>
+
             <p>Stack:</p>
             <ul>
               <li>Draft.js</li>
@@ -431,9 +507,11 @@ class App extends React.Component {
             <p>(state component) Data fetched from NBP API, ratio to Polish PLN</p>
 
             <table className="tableFetch">
-              <tr><th>Currency</th><th>Ratio</th></tr>
-              <tr><td>Euro</td><td>{this.state.euro}</td></tr>
-              <tr><td>US Dollar</td><td>{this.state.dollar}</td></tr>
+              <thead><tr><th>Currency</th><th>Ratio</th></tr></thead>
+              <tbody>
+                <tr><td>Euro</td><td>{this.state.euro}</td></tr>
+                <tr><td>US Dollar</td><td>{this.state.dollar}</td></tr>
+              </tbody>
             </table>
 
             <FetchFn />
