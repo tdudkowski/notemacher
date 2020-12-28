@@ -9,13 +9,11 @@ import Data from './notesArrayJSON.json'
 import FetchFn from "./Fetch"
 import "./style.css"
 
-// export const BASE_API_URL = ''
-
 class App extends React.Component {
 
   state = {
     notesJSON: [...Data],
-    isEditOpen: false,
+    isEditOpenJSON: false,
     isEditOpenMongo: false,
     isCreateOpenMongo: false,
     isCreateOpenJSON: false,
@@ -24,27 +22,27 @@ class App extends React.Component {
     euro: null,
     dollar: null,
     ratio: null,
-    temperatureInWroclaw: null,
-    stateContentVal: null,
+    stateContentJSONVal: null,
     stateContentMongoVal: null,
     stateTitleMongoVal: null,
     editMongoTime: null,
     userMongoID: null,
     mongoDB: [],
-    searchValue: 0,
+    mongoDBArchive: [],
+    searchValue: null,
+    searchValueLength: 0,
   }
 
   async componentDidMount() {
     const response1 = await fetch('https://api.nbp.pl/api/exchangerates/tables/a')
 
-    if (this.searchValue === 0) {
+    if (this.searchValueLength === 0) {
       axios.get('https://notemacher.herokuapp.com/notes')
         // axios.get('http://localhost:5000/notes')
 
         .then(res => {
-          this.setState({ mongoDB: [...res.data] });
+          this.setState({ mongoDB: [...res.data], mongoDBArchive: [...res.data], });
         })
-        .then(console.log("componentMounted"))
         .catch(function (error) {
           console.log("ERROR IN componentDidMount: ", error);
         })
@@ -59,13 +57,12 @@ class App extends React.Component {
   }
 
   async componentDidUpdate() {
-    if (this.state.searchValue === 0) {
+    if (this.state.searchValueLength === 0) {
       axios.get('https://notemacher.herokuapp.com/notes')
         // axios.get('http://localhost:5000/notes')
         .then(res => {
-          this.setState({ mongoDB: [...res.data] });
+          this.setState({ mongoDB: [...res.data], mongoDBArchive: [...res.data], });
         })
-        .then(console.log("componentUpdated"))
         .catch(function (error) {
           console.log("ERROR IN componentDidUpdate: ", error);
         })
@@ -92,16 +89,16 @@ class App extends React.Component {
   openEdit = (id) => {
     const thisContent = this.state.notesJSON.filter(item => item.id === id)[0].content
     this.setState({
-      isEditOpen: true,
+      isEditOpenJSON: true,
       id: id,
-      stateContentVal: thisContent
+      stateContentJSONVal: thisContent
     })
   }
 
   /* CLOSE EDIT JSON */
   closeEdit = () => {
     this.setState({
-      isEditOpen: false,
+      isEditOpenJSON: false,
     })
   }
 
@@ -169,17 +166,13 @@ class App extends React.Component {
 
   /* MONGO LIST */
   mongoNotes() {
-    console.log("inside LIST BEFORE: ", this.state.mongoDB)
-    if (this.state.searchValue) {
-      // this.setState({ mongoDB: this.state.mongoDB, })
-      console.log("inside LIST if SEARCHVALUE: ", this.state.mongoDB)
-      return this.state.mongoDB.map((data, id) => {
+    if (this.state.searchValueLength) {
+      return this.state.searchValue.map((data, id) => {
         return <DataMongo obj={data} key={id} open={this.openEditMongo}
           deleteMongoItem={() => this.removeItemMongo(data)} />
       });
     }
     else {
-      console.log("inside LIST if SEARCH NULL: ", this.state.mongoDB)
       return this.state.mongoDB.map((data, id) => {
         return <DataMongo obj={data} key={id} open={this.openEditMongo}
           deleteMongoItem={() => this.removeItemMongo(data)} />
@@ -313,75 +306,56 @@ class App extends React.Component {
   // https://digitalfortress.tech/tricks/top-15-commonly-used-regex/
   searchMongoFunction = (e) => {
     e.preventDefault()
-    axios.get('https://notemacher.herokuapp.com/notes')
-      .then(res => {
-        this.setState({
-          searchValue: e.target[0].value.length,
-          mongoDB: [...res.data],
-        },
-          () => {
-            const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
-            const searchData = this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target[0].value.toLowerCase()) || removedHTML(obj.content).toLowerCase().includes(e.target[0].value.toLowerCase()))
-            this.setState(prevState => ({
-              mongoDB: searchData,
-            }))
-          })
-        // this.mongoNotes()
-        console.log("inside SEARCH: ", this.state.mongoDB, e.target[0].value.length)
-        document.getElementsByClassName("searchResult")[0].classList.add("result")
-      })
-      .catch(function (error) {
-        console.log("ERROR IN componentSearch: ", error)
-      })
+
+    const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
+    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(e.target[0].value.toLowerCase()) || removedHTML(obj.content).includes(e.target[0].value.toLowerCase()))
+
+    this.setState({
+      searchValueLength: e.target[0].value.length,
+      mongoDB: searchData,
+      searchValue: searchData,
+    })
+    document.getElementsByClassName("searchResult")[0].classList.add("result")
   }
 
   handleInput = (e) => {
     if (e.target.value.length === 0) {
       this.setState({
-        searchValue: 0,
+        searchValueLength: 0,
       },
         document.getElementsByClassName("searchResult")[0].classList.remove("result"))
     }
   }
 
   restoreList = () => {
-    axios.get('https://notemacher.herokuapp.com/notes')
-      .then(res => {
-        this.setState({
-          searchValue: 0,
-          mongoDB: [...res.data],
-        },
-          document.getElementsByClassName("searchResult")[0].classList.remove("result"))
-      })
+    this.setState({
+      searchValueLength: 0,
+      mongoDB: this.state.mongoDBArchive,
+    })
+    document.getElementsByClassName("searchResult")[0].classList.remove("result")
   }
 
   searchInstant = (e) => {
-    console.log("INSTANT!!!", e.target.value)
 
-    axios.get('https://notemacher.herokuapp.com/notes')
-      .then(res => {
-        this.setState({
-          searchValue: e.target.value.length,
-          mongoDB: [...res.data],
-        },
-          () => {
-            const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
-            const searchData = this.state.mongoDB.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || removedHTML(obj.content).includes(e.target.value.toLowerCase()))
-            this.setState(prevState => ({
-              mongoDB: searchData,
-            }))
-          })
-        if (e.target.value.length === 0) { document.getElementsByClassName("searchResult")[0].classList.remove("result") }
-        else {
-          document.getElementsByClassName("searchResult")[0].classList.add("result")
-        }
-      })
+    const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
+    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || removedHTML(obj.content).includes(e.target.value.toLowerCase()))
 
+    this.setState({
+      searchValueLength: e.target.value.length,
+      mongoDB: searchData,
+      searchValue: searchData,
+    })
+
+    if (e.target.value.length === 0) { document.getElementsByClassName("searchResult")[0].classList.remove("result") }
+    else {
+      document.getElementsByClassName("searchResult")[0].classList.add("result")
+    }
+    return searchData
   }
   /*--- APP BODY ---*/
 
   render() {
-    const { isEditOpen, isEditOpenMongo, isCreateOpenMongo, isCreateOpenJSON } = this.state
+    const { isEditOpenJSON, isEditOpenMongo, isCreateOpenMongo, isCreateOpenJSON } = this.state
 
     return (
       <>
@@ -410,30 +384,27 @@ class App extends React.Component {
               />
               <h3>type to search</h3>
             </div></div>
-          <div>
-            <p>This is almost-almost version. Adding, deleting, and editing notes is fine. Search is... almost OK. I left 2 options of searching, both have the same failures: 1) only a second, and every next, action (click or character in input) is effective, 2) search is fine regardless of formatting, but only in scope of one line, any break to next line results in fail.</p>
-            <p>I send this to the server because it's better than previous one. But it sill has some urgent TODOs.</p>
-          </div>
         </header>
         <main>
           <article className="listNotes">
-            <h3>MongoDB Notes</h3>
+            <h3>MongoDB Notes <span>(number of Notes: {this.state.mongoDBArchive.length})</span></h3>
             <div className="searchResult">
-              {this.state.searchValue ? <div><h4>Search mode</h4>
+              {this.state.searchValueLength ? <div><h4>Search mode</h4>
                 <p>Till <strong>search mode</strong> is on, you can add, remove, and edit notes, but with no visible effect. To close search mode you should empty both input fields or click the button below 'restore list'.</p>
                 <p>The search returned {this.mongoNotes().length} items | <button className="big" onClick={this.restoreList}>Restore list</button></p></div> : null}
-              {this.state.mongoDB ? this.mongoNotes() : <div className="infoOnMongo">
+
+              {this.state.mongoDB.length ? this.mongoNotes() : <div className="infoOnMongo">
                 <p>If you are seeing this info, there're a few possibilities:</p>
                 <ul>
-                  <li>Your search returned no results (aka result is empty)</li>
                   <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably)</li>
                   <li>Database is empty now, in this case please use "ADD mongoDB Note" button to create one</li>
                 </ul>
               </div>}
             </div>
+
             <hr />
 
-            <h3>JSON Notes</h3>
+            <h3>JSON Notes <span>(number of Notes: {this.state.notesJSON.length})</span></h3>
 
             {this.state.notesJSON.map(item => (
               <ListItemJSON key={item.id} {...item} open={this.openEdit} deleteIt={this.removeItem} />
@@ -441,13 +412,13 @@ class App extends React.Component {
 
           </article>
 
-          {isEditOpen && <div className="edit">
+          {isEditOpenJSON && <div className="edit">
             <header>
               <h3>Edit JSON Note - note id: {this.state.id}</h3>
               <button className="big" onClick={this.closeEdit}>CLOSE</button>
             </header>
             <Form edit id={this.state.id} changeFunction={this.editItem} array={this.state.notesJSON}
-              stateContentVal={this.state.stateContentVal} close={this.closeEdit} />
+              stateContentJSONVal={this.state.stateContentJSONVal} close={this.closeEdit} />
           </div>}
 
 
@@ -488,6 +459,7 @@ class App extends React.Component {
           <aside>
 
             <h3>_notemacher</h3>
+            <p>Everything seems fine now. All functions of creating, deleting, and editing Notes are OK; searching works well in scope of one line - the same as in most usercases.</p>
             <p>Two kinds of Notes:</p>
             <ul>
               <li><strong>mongoDB Notes</strong> from mongoDB Atlas served by Node.js API</li>

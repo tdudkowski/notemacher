@@ -29,6 +29,7 @@ header input {width:9rem;}
 main {flex:1; display:flex; flex-direction: column-reverse;}
 
 article h3 {margin:1rem;}
+article h3 span {font-size:1rem; color:#998;}
 
 article.listNotes {flex:1; padding:5px;}
 
