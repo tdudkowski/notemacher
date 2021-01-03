@@ -12,12 +12,13 @@ changelog:
 
 - 0.1 functions of adding, deleting, and editing notes
 - 0.2 search
+- 0.3 categories
 
 plans:
 
-- design, basic optimization of code (0.3)
-- sanitized data flow (0.4)
-- categories of notes (0.5)
-- login (0.6)
+- deadline date, and importance level (0.4)
+- design, basic optimization of code (0.5)
+- sanitized data flow (0.6)
+- login (0.7)
 - add a stream of notes with chronological deadlines (kinda TODO list) (1.0)
-- Redux or sth like this when necessary
+- Redux or sth like this - when necessary

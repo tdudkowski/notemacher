@@ -1,8 +1,9 @@
 import { Editor, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import 'draft-js/dist/Draft.css'
 
-const DataMongo = ({ obj, id, open, deleteMongoItem }) => {
-
+const DataMongo = ({ obj, open, deleteMongoItem, handleClickCategory }) => {
+    // console.log(obj.id)
+    const key = obj.id
     const blocksFromHTML = convertFromHTML(obj.content);
     const state = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks,
@@ -11,8 +12,15 @@ const DataMongo = ({ obj, id, open, deleteMongoItem }) => {
 
     const editorState = EditorState.createWithContent(state)
 
+    const listCategories = () => {
+        if (obj.categories !== undefined) {
+            const arr = obj.categories
+            return arr.map(item => item.length > 0 && <button className="categories" onClick={() => handleClickCategory(item)}>{item}</button>)
+        }
+    }
+
     return (
-        <div key={id} className="noteItem">
+        <div key={key} className="noteItem">
             <header>
                 <div className="note-id">
                     <span>note ID: {obj.id}</span>
@@ -21,6 +29,7 @@ const DataMongo = ({ obj, id, open, deleteMongoItem }) => {
                 </div>
                 <h4>{obj.title} </h4>
                 <p className="noteInfo"><span>Created: {obj.dateCreation} by {obj.author}</span> | <span>{obj.dateEdit ? `Last edit: ${obj.dateEdit} by: ${obj.editor} ` : `unedited`}</span></p>
+                <p>Categories: {listCategories()}</p>
             </header>
             <Editor
                 editorState={editorState}

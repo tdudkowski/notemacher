@@ -31,6 +31,7 @@ const FormAddMongo = ({ addMongoFunction, edit, close, id }) => {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
     const [titleVal, setTitleVal] = useState("")
     const [contentVal, setContentVal] = useState("")
+    const [categoriesVal, setCategoriesVal] = useState([])
 
     const titleChange = (e) => {
         setTitleVal(e.target.value)
@@ -42,8 +43,21 @@ const FormAddMongo = ({ addMongoFunction, edit, close, id }) => {
         setEditorState(editorState)
     }
 
+    const categoriesChange = (e) => {
+        // setCategoriesVal(categoriesVal => categoriesVal.concat(e.target.value))
+        // setCategoriesVal([...categoriesVal, e.target.value])
+        setCategoriesVal(e.target.value)
+        console.log("ADD1 categories", categoriesVal)
+        // console.log("TEST: ", Array.from(categoriesVal.split(",").trim()))
+        // console.log("CATVAL: ", categoriesVal)
+    }
+
     const handleSubmit = (e, titleVal, contentVal) => {
-        addMongoFunction(e, titleVal, contentVal)
+        let arrEffect = []
+        if (categoriesVal.length) {
+            arrEffect = Array.from(categoriesVal.split(","))
+        }
+        addMongoFunction(e, titleVal, contentVal, arrEffect)
         close()
     }
 
@@ -98,7 +112,8 @@ const FormAddMongo = ({ addMongoFunction, edit, close, id }) => {
                 // ref={(element) => { editor = element; }}
                 />
             </div>
-
+            <label htmlFor="categories">Categories</label>
+            <input type="text" name="categories" id="categories" onChange={categoriesChange} value={categoriesVal} />
             <button className="big" type="submit">ADD</button>
 
         </form>

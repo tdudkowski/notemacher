@@ -26,7 +26,8 @@ const staticToolbarPlugin = createToolbarPlugin();
 const { Toolbar } = staticToolbarPlugin;
 const plugins = [staticToolbarPlugin];
 
-const FormEditMongo = ({ changeMongoFn, id, close, editMongoTime, userMongoID, stateTitleVal, stateContentVal }) => {
+const FormEditMongo = ({ changeMongoFn, id, close, editMongoTime, userMongoID, stateCategoriesVal, stateTitleVal, stateContentVal }) => {
+
     const blocksFromHTML = convertFromHTML(stateContentVal);
     const state = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks,
@@ -35,9 +36,17 @@ const FormEditMongo = ({ changeMongoFn, id, close, editMongoTime, userMongoID, s
 
     const [editorState, setEditorState] = useState(() => EditorState.createWithContent(state))
     const [titleVal, setTitleVal] = useState(stateTitleVal)
+    const [categoriesVal, setCategoriesVal] = useState([stateCategoriesVal, ""].toString(", "))
 
     const titleChange = (e) => {
         setTitleVal(e.target.value)
+    }
+
+    const categoriesChange = (e) => {
+        // setCategoriesVal(categoriesVal => categoriesVal.concat(e.target.value))
+        // setCategoriesVal([...categoriesVal, e.target.value])
+        setCategoriesVal(e.target.value)
+        // console.log("STATE: ", stateCategoriesVal, "CATVAL: ", categoriesVal)
     }
 
     const onChange = (editorState) => {
@@ -46,8 +55,11 @@ const FormEditMongo = ({ changeMongoFn, id, close, editMongoTime, userMongoID, s
     }
 
     const handleSubmit = (e, titleVal) => {
+        const arrEffect = Array.from(categoriesVal.split(","))
+        setCategoriesVal(Array.from(categoriesVal.split(",")))
         stateContentVal = stateToHTML(editorState.getCurrentContent());
-        changeMongoFn(e, id, titleVal, stateContentVal, editMongoTime, userMongoID);
+        changeMongoFn(e, id, titleVal, stateContentVal, arrEffect, editMongoTime, userMongoID);
+        // console.log(stateCategoriesVal, categoriesVal, arrEffect)
         close()
     }
 
@@ -99,10 +111,14 @@ const FormEditMongo = ({ changeMongoFn, id, close, editMongoTime, userMongoID, s
                 />
             </div>
             <button className="big" type="submit">SAVE</button>
+            <label htmlFor="categories">{"Categories of [ " + id + " ]"}</label>
+            <input type="text" name="categories" id="categories" onChange={categoriesChange} value={categoriesVal} />
             <h4>Result of EDIT</h4>
             <p>Title: {titleVal}</p>
             <p>Edit time: {editMongoTime}</p>
             <p>Editor: {userMongoID}</p>
+            <p>StateCategories: {[stateCategoriesVal]}</p>
+            <p>Categories: {categoriesVal}</p>
         </form>
     )
 }

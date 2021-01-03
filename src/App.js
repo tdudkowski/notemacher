@@ -9,6 +9,9 @@ import Data from './notesArrayJSON.json'
 import FetchFn from "./Fetch"
 import "./style.css"
 
+// const CONNECTION = "http://localhost:5000/notes"
+const CONNECTION = 'https://notemacher.herokuapp.com/notes'
+
 class App extends React.Component {
 
   state = {
@@ -25,20 +28,22 @@ class App extends React.Component {
     stateContentJSONVal: null,
     stateContentMongoVal: null,
     stateTitleMongoVal: null,
+    stateCategoriesVal: null,
     editMongoTime: null,
     userMongoID: null,
     mongoDB: [],
     mongoDBArchive: [],
     searchValue: null,
     searchValueLength: 0,
+    categoriesSelected: null,
+    reloadStuff: true,
   }
 
   async componentDidMount() {
     const response1 = await fetch('https://api.nbp.pl/api/exchangerates/tables/a')
 
-    if (this.searchValueLength === 0) {
-      axios.get('https://notemacher.herokuapp.com/notes')
-        // axios.get('http://localhost:5000/notes')
+    if (this.state.reloadStuff) {
+      axios.get(CONNECTION)
 
         .then(res => {
           this.setState({ mongoDB: [...res.data], mongoDBArchive: [...res.data], });
@@ -57,9 +62,8 @@ class App extends React.Component {
   }
 
   async componentDidUpdate() {
-    if (this.state.searchValueLength === 0) {
-      axios.get('https://notemacher.herokuapp.com/notes')
-        // axios.get('http://localhost:5000/notes')
+    if (this.state.reloadStuff) {
+      axios.get(CONNECTION)
         .then(res => {
           this.setState({ mongoDB: [...res.data], mongoDBArchive: [...res.data], });
         })
@@ -166,16 +170,16 @@ class App extends React.Component {
 
   /* MONGO LIST */
   mongoNotes() {
-    if (this.state.searchValueLength) {
+    if (!this.state.reloadStuff) {
       return this.state.searchValue.map((data, id) => {
-        return <DataMongo obj={data} key={id} open={this.openEditMongo}
-          deleteMongoItem={() => this.removeItemMongo(data)} />
+        return <DataMongo obj={data} key={data.id} open={this.openEditMongo}
+          deleteMongoItem={() => this.removeItemMongo(data)} handleClickCategory={this.handleClickCategory} />
       });
     }
     else {
       return this.state.mongoDB.map((data, id) => {
-        return <DataMongo obj={data} key={id} open={this.openEditMongo}
-          deleteMongoItem={() => this.removeItemMongo(data)} />
+        return <DataMongo obj={data} key={data.id} open={this.openEditMongo}
+          deleteMongoItem={() => this.removeItemMongo(data)} handleClickCategory={this.handleClickCategory} />
       });
     }
   }
@@ -203,9 +207,9 @@ class App extends React.Component {
   }
 
   /* ADD MONGO */
-  addItemMongo = (e, titleVal, contentVal) => {
+  addItemMongo = (e, titleVal, contentVal, arrEffect) => {
     e.preventDefault()
-
+    console.log("APP : ", arrEffect)
     const dateEdit = new Date().toISOString().slice(0, 10)
     const hrEdit = new Date().toLocaleTimeString("pl-PL").slice(0, 5)
     const aMoment = `${dateEdit} - ${hrEdit}`
@@ -215,10 +219,11 @@ class App extends React.Component {
       dateCreation: aMoment,
       title: titleVal,
       content: contentVal,
-      author: "anon"
+      author: "anon",
+      categories: arrEffect
     }
 
-    axios.post('https://notemacher.herokuapp.com/notes', newMongoItem)
+    axios.post(CONNECTION, newMongoItem)
       .then(res => {
         // this.setState({ mongoDB: [...newMongoItem] });
       })
@@ -239,6 +244,7 @@ class App extends React.Component {
     const thisUser = "anon"
     const thisTitle = this.state.mongoDB.filter(item => item.id === id)[0].title
     const thisContent = this.state.mongoDB.filter(item => item.id === id)[0].content
+    const thisCategories = this.state.mongoDB.filter(item => item.id === id)[0].categories
     this.setState({
       isEditOpenMongo: true,
       id: id,
@@ -246,11 +252,12 @@ class App extends React.Component {
       stateContentMongoVal: thisContent,
       editMongoTime: aMoment,
       userMongoID: thisUser,
+      stateCategoriesVal: thisCategories
     })
   }
 
   /* SAVE EDITED MONGO */
-  editItemMongo = (e, id, titleVal, contentVal, editMongoTime, userMongoID) => {
+  editItemMongo = (e, id, titleVal, contentVal, arrEffect, editMongoTime, userMongoID) => {
     e.preventDefault()
 
     const dateEdit = new Date().toISOString().slice(0, 10)
@@ -267,20 +274,24 @@ class App extends React.Component {
           dateEdit: aMoment,
           title: titleVal,
           content: contentVal,
-          editor: "anon"
+          editor: "anon",
+          categories: arrEffect
         }
 
         const newStateNotes = this.state.mongoDB
         newStateNotes.splice(i, 1, changedMongoItem)
 
-        this.setState({
-          mongoDB: newStateNotes,
-          isCreateOpenMongo: false,
-        })
+        // this.setState({
+        //   mongoDB: newStateNotes,
+        //   isCreateOpenMongo: false,
+        // })
 
-        axios.put('https://notemacher.herokuapp.com/notes', changedMongoItem)
+        axios.put(CONNECTION, changedMongoItem)
           .then(res => {
-            // this.setState({ mongoDB: [...newMongoItem] });
+            this.setState({
+              mongoDB: newStateNotes,
+              isCreateOpenMongo: false,
+            });
           })
           .catch(function (error) {
             console.log("ERROR IN REACT EDIT MONGO NOTE", error);
@@ -291,7 +302,7 @@ class App extends React.Component {
 
   /* REMOVE MONGO */
   removeItemMongo = (data) => {
-    axios.delete('https://notemacher.herokuapp.com/notes', { data })
+    axios.delete(CONNECTION, { data })
       .then(res => {
         // this.setState({ mongoDB: [...newMongoItem] });
       })
@@ -308,10 +319,12 @@ class App extends React.Component {
     e.preventDefault()
 
     const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
-    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(e.target[0].value.toLowerCase()) || removedHTML(obj.content).includes(e.target[0].value.toLowerCase()))
+    const searchedValue = e.target[0].value.toLowerCase()
+    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(searchedValue) || removedHTML(obj.content).includes(searchedValue) || obj.categories.toString().toLowerCase().includes(searchedValue))
 
     this.setState({
       searchValueLength: e.target[0].value.length,
+      reloadStuff: false,
       mongoDB: searchData,
       searchValue: searchData,
     })
@@ -329,19 +342,22 @@ class App extends React.Component {
 
   restoreList = () => {
     this.setState({
+      reloadStuff: true,
       searchValueLength: 0,
       mongoDB: this.state.mongoDBArchive,
+      categoriesSelected: null,
     })
     document.getElementsByClassName("searchResult")[0].classList.remove("result")
   }
 
   searchInstant = (e) => {
-
+    // const categoriesFlat = obj.categories.flat();
     const removedHTML = (itemContent) => itemContent.toLowerCase().replaceAll(/<\/?[\w\s]*>|<.+[\W]>/g, "")
-    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(e.target.value.toLowerCase()) || removedHTML(obj.content).includes(e.target.value.toLowerCase()))
+    const searchedValue = e.target.value.toLowerCase()
+    const searchData = this.state.mongoDBArchive.filter(obj => obj.title.toLowerCase().includes(searchedValue) || removedHTML(obj.content).includes(searchedValue) || obj.categories.toString().toLowerCase().includes(searchedValue))
 
     this.setState({
-      searchValueLength: e.target.value.length,
+      reloadStuff: false,
       mongoDB: searchData,
       searchValue: searchData,
     })
@@ -352,6 +368,22 @@ class App extends React.Component {
     }
     return searchData
   }
+
+  /* CATEGORIES */
+
+  handleClickCategory = (item) => {
+
+    const searchedValue = this.state.mongoDBArchive.filter(obj => obj.categories.includes(item))
+    this.setState({
+      categoriesSelected: item,
+      searchValue: searchedValue,
+      reloadStuff: false,
+      // searchValueLength: 1,
+    })
+
+    console.log(item, this.state.categoriesSelected, searchedValue,)
+  }
+
   /*--- APP BODY ---*/
 
   render() {
@@ -392,11 +424,12 @@ class App extends React.Component {
               {this.state.searchValueLength ? <div><h4>Search mode</h4>
                 <p>Till <strong>search mode</strong> is on, you can add, remove, and edit notes, but with no visible effect. To close search mode you should empty both input fields or click the button below 'restore list'.</p>
                 <p>The search returned {this.mongoNotes().length} items | <button className="big" onClick={this.restoreList}>Restore list</button></p></div> : null}
-
+              {this.state.categoriesSelected ? <div><p>Category searched: <strong>{this.state.categoriesSelected}</strong></p>
+                <p>Back to main view: <button className="big" onClick={this.restoreList}>Restore list</button></p></div> : null}
               {this.state.mongoDB.length ? this.mongoNotes() : <div className="infoOnMongo">
                 <p>If you are seeing this info, there're a few possibilities:</p>
                 <ul>
-                  <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably)</li>
+                  <li>Notes are not yet loaded, connection to database usually takes a moment (but not enough long to read it comfortably: ~3 seconds in maximum)</li>
                   <li>Database is empty now, in this case please use "ADD mongoDB Note" button to create one</li>
                 </ul>
               </div>}
@@ -442,6 +475,7 @@ class App extends React.Component {
               changeMongoFn={this.editItemMongo}
               array={this.state.mongoDB}
               stateTitleVal={this.state.stateTitleMongoVal}
+              stateCategoriesVal={this.state.stateCategoriesVal}
               stateContentVal={this.state.stateContentMongoVal}
               editMongoTime={this.state.editMongoTime}
               userMongoID={this.state.userMongoID}
@@ -459,14 +493,21 @@ class App extends React.Component {
           <aside>
 
             <h3>_notemacher</h3>
-            <p>Everything seems fine now. All functions of creating, deleting, and editing Notes are OK; searching works well in scope of one line - the same as in most usercases.</p>
-            <p>Two kinds of Notes:</p>
+
+            <h4>Features</h4>
             <ul>
-              <li><strong>mongoDB Notes</strong> from mongoDB Atlas served by Node.js API</li>
-              <li><strong>JSON Notes</strong> (below hr line) kept in local React file. I've started from it, but now they are kept only for a testing purposes.</li>
+              <li><strong>Notes</strong> creating, deleting, and editing Notes are OK.</li>
+              <li><strong>Search</strong> works well in scope of one line - the same as in most usercases. There're two kinds of search, it still not decided which one is better and should stay.</li>
+              <li><strong>Categories</strong> searching in them is not case sensitive, but select by clicking them is. It's a feature or bug, it depends. I'm not sure if uppercase should be allowed in categories, or just leave it to user. But it works and is stable - so let call it ver 0.3.</li>
             </ul>
 
-            <p>Stack:</p>
+            <h4>Two kinds of Notes:</h4>
+            <ul>
+              <li><strong>mongoDB Notes</strong> from mongoDB Atlas served by Node.js API</li>
+              <li><strong>JSON Notes</strong> (below hr line) kept in local React file and browser's cache. I've started from it, but now they are kept only for a testing purposes.</li>
+            </ul>
+
+            <h4>Stack:</h4>
             <ul>
               <li>Draft.js</li>
               <li>React 17 + hooks (Github)</li>
@@ -474,6 +515,7 @@ class App extends React.Component {
               <li>Node.js + Express (Heroku)</li>
               <li>mongoDB (MongoDB Atlas)</li>
             </ul>
+
             <hr />
             <h3>Fetch</h3>
             <p>(state component) Data fetched from NBP API, ratio to Polish PLN</p>
